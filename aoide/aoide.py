@@ -315,7 +315,7 @@ def correct_cube(incube, outcube, A_V, star_position=[], offset=(0, 0), binning=
     hdus.append(pyfits.PrimaryHDU(cube.astype(numpy.float32)))
     hdus.append(pyfits.ImageHDU(error.astype(numpy.float32), name='ERROR'))
     hdu = pyfits.HDUList(hdus)
-    #header['EXTEND'] = False
+
     if binning:
         header['CRPIX1'] = (float(header['CRPIX1']) - offset[0]) / 2.0
         header['CRPIX2'] = (float(header['CRPIX2']) - offset[1]) / 2.0
