@@ -18,5 +18,5 @@ Run the MUSE pipeline, producing a `DATACUBE_FINAL.fits`
 ### Step 2
 
 
-
+[img src="misc/after_pca.png"]
 
