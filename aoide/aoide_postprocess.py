@@ -55,14 +55,14 @@ def subtract_sky(PIXTAB_in, SKYSPEC, PIXTAB_out, parallel=1):
         def thread(out_sky, out_var, wave):
             return [out_sky(wave), out_var(wave)]
 
-        for i in xrange(cpus):
+        for i in range(cpus):
             results.append(pool.apply_async(
                 thread, args=(out_sky, out_var, wave_split[i])))
         pool.close()
         pool.join()
         sky_out = []
         var_out = []
-        for i in xrange(cpus):
+        for i in range(cpus):
             sky_out.append(results[i].get()[0])
             var_out.append(results[i].get()[1])
         PIX_sky = numpy.concatenate(sky_out)
@@ -126,7 +126,6 @@ def interpolate_sky(SKYSPEC_in, MJD_in, SKYSPEC_out, MJD_out, header_out='', ord
 
 def create_PCA_sky(cube_in, PCA_out, sky_mask, cont_filt=50, spectra=20000, parallel='auto'):
 
-    print("Creating PCA Components for Sky")
     hdu = pyfits.open(cube_in)
     cube = hdu[1].data
     dim = cube.shape
@@ -149,13 +148,13 @@ def create_PCA_sky(cube_in, PCA_out, sky_mask, cont_filt=50, spectra=20000, para
     if cpus > 1:
         pool = Pool(processes=cpus)
         results = []
-        for i in xrange(smax):
+        for i in range(smax):
             results.append(pool.apply_async(
                 ndimage.filters.median_filter, args=(out[i, :], cont_filt)))
         pool.close()
         pool.join()
         smooth_out = numpy.zeros_like(out)
-        for c in xrange(smax):
+        for c in range(smax):
             spec = results[c].get()
             smooth_out[c, :] = spec
     else:
@@ -176,7 +175,7 @@ def create_PCA_sky(cube_in, PCA_out, sky_mask, cont_filt=50, spectra=20000, para
 def fit_PCA(cube, idx_x, idx_y, pca_specs, cont_filt, select):
     dim = cube.shape
     clean_cube = numpy.zeros((numpy.sum(select), dim[1]))
-    for m in xrange(len(idx_x)):
+    for m in range(len(idx_x)):
         spec = cube[:, m]
         if numpy.sum(numpy.isnan(spec)) < 10:
             spec[numpy.isnan(spec)] = 0
@@ -194,7 +193,6 @@ def fit_PCA(cube, idx_x, idx_y, pca_specs, cont_filt, select):
 
 def subtract_PCA_sky(cube_in, cube_out, PCA_spec, components=150, cont_filt=40, parallel='auto'):
 
-    print("Subtracting PCA Sky Components from MUSE Cube. This might take a while.")
     hdu = pyfits.open(PCA_spec)
     pca_specs = hdu[0].data[:components, :] * 10000.0
     hdu.close()
@@ -220,12 +218,12 @@ def subtract_PCA_sky(cube_in, cube_out, PCA_spec, components=150, cont_filt=40, 
         idx_y_split = numpy.array_split(idx_y, cpus)
         idx_x_split = numpy.array_split(idx_x, cpus)
         results = []
-        for c in xrange(cpus):
+        for c in range(cpus):
             results.append(pool.apply_async(fit_PCA, args=(
                 cube[:, idx_y_split[c], idx_x_split[c]], idx_x_split[c], idx_y_split[c], pca_specs, cont_filt, select)))
         pool.close()
         pool.join()
-        for c in xrange(cpus):
+        for c in range(cpus):
             out = results[c].get()
             clean_cube[:, idx_y_split[c], idx_x_split[c]] = out[:, :]
     else:
@@ -236,7 +234,6 @@ def subtract_PCA_sky(cube_in, cube_out, PCA_spec, components=150, cont_filt=40, 
 
     cube[select, :, :] = clean_cube
     hdu.writeto(cube_out, overwrite=True)
-    print("Done.")
 
 
 def gal_extinct(wave, A_V, Rv=3.1):

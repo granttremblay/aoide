@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
+
+import os
 import sys
-import pylab
-import numpy
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 from astropy.io import fits as pyfits
 
@@ -14,10 +17,9 @@ from scratch. Otherwise, the supplied mask will be modified.
 The masking porcess is carried out using the mouse: An area to mask is selected
 by moving the mouse over it while pressing the left button. To unmask an area,
 use the right button. The cuts might be changed by clicking on the wheel.
-Note that pylab.show() must be called after an instance of MaskFrame has been
+Note that plt.show() must be called after an instance of MaskFrame has been
 created!
 
-V1.0 - 2009/05/06 (c) S.Kamann
 """
 
 
@@ -26,7 +28,7 @@ class MaskFrame:
     Initiate an instance
     """
 
-    def __init__(self, image, mask_name, cuts=(0, 1), extension=0):
+    def __init__(self, image, mask_name, cuts=(0, 10), extension=0):
         fits_ima = pyfits.open(image)
         self.true_arr = fits_ima[extension].data
         if len(self.true_arr.shape) == 3:
@@ -40,18 +42,18 @@ class MaskFrame:
             self.mask = self.in_mask[0].data
         else:
             self.in_mask = None
-            self.mask = numpy.zeros(self.true_arr.shape, dtype='Int16')
+            self.mask = np.zeros(self.true_arr.shape, dtype='Int16')
 
         self.plot_arr = self.true_arr + (self.mask * 1e9)
 
         self.lo_cut = cuts[0]
         self.hi_cut = cuts[1]
 
-        self.fig = pylab.figure()
+        self.fig = plt.figure(figsize=(8,8))
         self.ax = self.fig.add_subplot(111)
-        self.ax.set_title('left - mask, right - unmask, wheel - change cuts')
+        self.ax.set_title('LEFT: Mask | RIGHT: Unmask | Wheel: Change cuts')
         self.im = self.ax.imshow(
-            self.true_arr, origin='lower', interpolation='nearest')
+            self.true_arr, origin='lower', interpolation='nearest', cmap='magma')
 
         self.update()
 
@@ -76,7 +78,7 @@ class MaskFrame:
         if event.button == 2:
             print('Current cut levels are: {}, {}'.format(
                 self.lo_cut, self.hi_cut))
-            new_c = raw_input('Enter new cut levels: ')
+            new_c = input('Enter new cut levels as low,high e.g. 0,20: ')
             self.lo_cut = float(new_c.split(',')[0])
             self.hi_cut = float(new_c.split(',')[1])
             self.update()
@@ -137,13 +139,14 @@ class MaskFrame:
             self.in_mask.flush()
 
 
+
 def main():
     if len(sys.argv) == 3:
         make_mask = MaskFrame(sys.argv[1], sys.argv[2])
     elif len(sys.argv) == 4:
         make_mask = MaskFrame(
             sys.argv[1], sys.argv[2], extension=int(sys.argv[3]))
-    pylab.show()
+    plt.show()
     make_mask.save_mask()
 
 
