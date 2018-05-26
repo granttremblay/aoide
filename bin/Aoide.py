@@ -37,6 +37,11 @@ def main():
     print("\nAoide will be run in parallel using {} CPU cores.".format(args.parallel))
     print("Working directory set to {} (change with -d)\n".format(args.working_directory))
 
+    proceed = yes_no("Are you happy with this setup? Proceed? [yes/no]: ")
+
+    if proceed is False:
+        sys.exit("You asked to reset parameters before proceeding. Finished.")
+
     # Set directories & keep things clean.
     working_directory = args.working_directory
     skymask_directory = working_directory + "SKY_MASKS/"
