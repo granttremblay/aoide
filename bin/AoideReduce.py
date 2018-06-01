@@ -50,7 +50,7 @@ def main():
 
 
     print("=======      WAVELENGTH CALIBRATION     =======")
-    os.system("OMP_NUM_THREADS={} esorex --log-file=wavecal.log muse_wavecal --nifu=-1 --resample --residuals --merge wavecal.sof".format(cores))
+    os.system("OMP_NUM_THREADS={} esorex --log-file=wavecal.log muse_wavecal --nifu=-1 --resample --residuals --merge arc.sof".format(cores))
 
 
     print("=======       LINE SPREAD FUNCTION      =======")
@@ -69,6 +69,15 @@ def main():
     print("=======    SCIBASIC for STD FRAME      =======")
     os.system("OMP_NUM_THREADS={} esorex --log-file=science_scibasic.log muse_scibasic --nifu=-1 --merge std_scibasic.sof".format(cores))
     
+
+
+    print("=======        FLUX CALIBRATION         =======")
+    os.system("OMP_NUM_THREADS={} esorex --log-file=fluxcal.log muse_standard --filter=white fluxcal.sof".format(cores))
+    
+
+
+    print("=======           SCIPOST              =======")
+    os.system("OMP_NUM_THREADS={} esorex --log-file=fluxcal.log muse_standard --filter=white fluxcal.sof".format(cores))    
 
 
 

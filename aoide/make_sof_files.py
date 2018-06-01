@@ -7,6 +7,7 @@ import glob
 from astropy.io import fits
 
 
+
 def make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname):
 
     # Work in the reduction directory. We assume it's already createdself.
