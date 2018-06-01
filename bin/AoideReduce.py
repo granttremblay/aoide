@@ -41,6 +41,37 @@ def main():
     os.system("OMP_NUM_THREADS={} esorex --log-file=bias.log muse_bias --nifu=-1 --merge bias.sof".format(cores))
 
 
+    print("=======  CREATING MASTER DARK =======")
+    os.system("OMP_NUM_THREADS={} esorex --log-file=dark.log muse_dark --nifu=-1 --merge dark.sof".format(cores))
+
+
+    print("=======  CREATING MASTER FLAT =======")
+    os.system("OMP_NUM_THREADS={} esorex --log-file=flat.log muse_flat --nifu=-1 --merge flat.sof".format(cores))
+
+
+    print("=======      WAVELENGTH CALIBRATION     =======")
+    os.system("OMP_NUM_THREADS={} esorex --log-file=wavecal.log muse_wavecal --nifu=-1 --resample --residuals --merge wavecal.sof".format(cores))
+
+
+    print("=======       LINE SPREAD FUNCTION      =======")
+    os.system("OMP_NUM_THREADS={} esorex --log-file=lsf.log muse_lsf --nifu=-1 --merge lsf.sof".format(cores))
+
+
+    print("=======          TWILIGHT FLATS         =======")
+    os.system("OMP_NUM_THREADS={} esorex --log-file=twilight.log muse_twilight twilight.sof".format(cores))
+
+
+    print("=======    SCIBASIC for SCI FRAMES      =======")
+    os.system("OMP_NUM_THREADS={} esorex --log-file=science_scibasic.log muse_scibasic --nifu=-1 --merge science_scibasic.sof".format(cores))
+
+
+
+    print("=======    SCIBASIC for STD FRAME      =======")
+    os.system("OMP_NUM_THREADS={} esorex --log-file=science_scibasic.log muse_scibasic --nifu=-1 --merge std_scibasic.sof".format(cores))
+    
+
+
+
 # def parse_args():
 
 #     parser = argparse.ArgumentParser(
