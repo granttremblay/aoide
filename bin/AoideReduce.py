@@ -31,7 +31,7 @@ def main():
 
     sof.make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname)
 
-    os.chdir(raw_data_dir)
+    os.chdir(reduction_dir)
 
     print("=======  STARTING REDUCTION OF MUSE DATA =======")
     print("Setting number of OMP threads to {} CPU cores".format(cores))
