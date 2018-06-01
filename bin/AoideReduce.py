@@ -31,17 +31,26 @@ def main():
 
     sof.make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname)
 
-#
+    os.chdir(raw_data_dir)
+
+    print("=======  STARTING REDUCTION OF MUSE DATA =======")
+    print("Setting number of OMP threads to {} CPU cores".format(cores))
+
+
+    print("=======  CREATING MASTER BIAS =======")
+    os.system("OMP_NUM_THREADS={} esorex --log-file=bias.log muse_bias --nifu=-1 --merge bias.sof".format(cores))
+
+
 # def parse_args():
-#
+
 #     parser = argparse.ArgumentParser(
 #         description="Produce MUSE cube from raw data")
-#
+
 #     parser.add_argument('input_cube', metavar='CUBE_IN', type=str, nargs='?',
 #                         help='Input FITS datacube from which sky spectra are selected')
-#
+
 #     args = parser.parse_args()
-#
+
 #     return args
 
 
