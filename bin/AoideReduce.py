@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 '''
 Reduce a MUSE cube | G. Tremblay
 '''
