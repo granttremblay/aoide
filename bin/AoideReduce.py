@@ -17,6 +17,8 @@ from aoide import make_sof_files as sof
 
 def main():
 
+    skip_existing = True
+
     cores = 6
 
     science_targname = 'Abell 3581'
@@ -33,20 +35,43 @@ def main():
 
     os.chdir(reduction_dir)
 
+    if skip_existing is True:
+        if os.path.isfile('MASTER_BIAS.FITS'):
+            print("Found MASTER BIAS")
+            skip_bias = True
+        else: 
+            skip_bias = False
+
+        if os.path.isfile('MASTER_DARK.FITS'):
+            skip_dark = True
+        else:
+            skip_dark = False
+
+        if os.path.isfile('MASTER_FLAT.FITS'):
+            skip_flat = True
+        else:
+            skip_flat = False
+
     print("=======  STARTING REDUCTION OF MUSE DATA =======")
     print("Setting number of OMP threads to {} CPU cores".format(cores))
 
+    if skip_bias is False:
+        print("=======  CREATING MASTER BIAS =======")
+        os.system("OMP_NUM_THREADS={} esorex --log-file=bias.log muse_bias --nifu=-1 --merge bias.sof".format(cores))
+    elif skip_bias is True:
+        print("SKIPPING MASTER BIAS CREATION")
 
-    print("=======  CREATING MASTER BIAS =======")
-    os.system("OMP_NUM_THREADS={} esorex --log-file=bias.log muse_bias --nifu=-1 --merge bias.sof".format(cores))
+    if skip_dark is False:
+        print("=======  CREATING MASTER DARK =======")
+        os.system("OMP_NUM_THREADS={} esorex --log-file=dark.log muse_dark --nifu=-1 --merge dark.sof".format(cores))
+    elif skip_dark is True:
+        print("SKIPPING MASTER DARK CREATION")
 
-
-    print("=======  CREATING MASTER DARK =======")
-    os.system("OMP_NUM_THREADS={} esorex --log-file=dark.log muse_dark --nifu=-1 --merge dark.sof".format(cores))
-
-
-    print("=======  CREATING MASTER FLAT =======")
-    os.system("OMP_NUM_THREADS={} esorex --log-file=flat.log muse_flat --nifu=-1 --merge flat.sof".format(cores))
+    if skip_flat is False:
+        print("=======  CREATING MASTER FLAT =======")
+        os.system("OMP_NUM_THREADS={} esorex --log-file=flat.log muse_flat --nifu=-1 --merge flat.sof".format(cores))
+    elif skip_flat is True:
+        print("SKIPPING MASTER FLAT CREATION")
 
 
     print("=======      WAVELENGTH CALIBRATION     =======")
@@ -65,16 +90,13 @@ def main():
     os.system("OMP_NUM_THREADS={} esorex --log-file=science_scibasic.log muse_scibasic --nifu=-1 --merge science_scibasic.sof".format(cores))
 
 
-
     print("=======    SCIBASIC for STD FRAME      =======")
     os.system("OMP_NUM_THREADS={} esorex --log-file=science_scibasic.log muse_scibasic --nifu=-1 --merge std_scibasic.sof".format(cores))
     
 
-
     print("=======        FLUX CALIBRATION         =======")
     os.system("OMP_NUM_THREADS={} esorex --log-file=fluxcal.log muse_standard --filter=white fluxcal.sof".format(cores))
     
-
 
     print("=======           SCIPOST              =======")
     os.system("OMP_NUM_THREADS={} esorex --log-file=fluxcal.log muse_standard --filter=white fluxcal.sof".format(cores))    

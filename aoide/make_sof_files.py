@@ -260,6 +260,26 @@ def make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname
     print(open(std_sof_file, "r").read())
     print("-------------------------------------------------------")
 
+
+    ## MAKE FLUXCAL.SOF #####
+
+    fluxcal_sof_file = "fluxcal.sof"
+
+    if os.path.exists(fluxcal_sof_file):
+        print("Old {} found. Overwriting it.".format(fluxcal_sof_file))
+        os.remove(fluxcal_sof_file)
+
+    for i in range(24):
+        sof = open(fluxcal_sof_file, mode="a")
+        sof.write("PIXTABLE_STD_0001-{:02}.fits".format(i + 1) + "    PIXTABLE_STD\n")
+    sof.write("{}/extinct_table.fits    EXTINCT_TABLE\n".format(static_cal_dir))
+    sof.write("{}/std_flux_table.fits    STD_FLUX_TABLE\n".format(static_cal_dir))
+    sof.close()
+
+    print("\n----------------  {} FILE CREATED ---------------\n".format(fluxcal_sof_file.upper()))
+    print(open(fluxcal_sof_file, "r").read())
+
+
     ## MAKE ALIGN.SOF ########
 
     align_sof_file = "align.sof"
