@@ -109,7 +109,7 @@ def main():
             skip_fluxcal = True
         if os.path.isfile('DATACUBE_SINGLE_FINAL_0001_1.fits'):
             skip_scipost = True
-        if os.path.isfile('DATACUBE_AOIDE_UNCLEAN.fits')
+        if os.path.isfile('DATACUBE_AOIDE_UNCLEAN.fits'):
             skip_combine = True
 
 
