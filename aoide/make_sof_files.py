@@ -331,7 +331,7 @@ def make_sof_files(raw_data_dir, reduction_dir, static_cal_dir):
         sof = open("science_scipost_{}.sof".format(i + 1), mode="a")
         for j in range(24):
             # you need to zero pad the first 9 numbers
-            sof.write("PIXTABLE_OBJECT_000{}-{:02}".format(i +
+            sof.write("PIXTABLE_OBJECT_000{}-{:02}.fits".format(i +
                                                            1, j + 1) + "    PIXTABLE_OBJECT\n")
         sof.write("STD_RESPONSE_0001.fits    STD_RESPONSE\n")
         sof.write("STD_TELLURIC_0001.fits    STD_TELLURIC\n")
