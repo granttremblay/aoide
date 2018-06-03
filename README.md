@@ -3,6 +3,8 @@
 *"[Aoide](https://en.wikipedia.org/wiki/Aoide),
 one of the nine daughters of Zeus and Mnemosyne..."*
 
+<img src="misc/A2597_movie.gif" alt="MUSE is awesome" style="width: 200px;"/>
+
 #### Dr. Grant R. Tremblay | Astrophysicist | Harvard-Smithsonian Center for Astrophysics
 
 
