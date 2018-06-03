@@ -44,6 +44,8 @@ for file in sorted(rawfiles):
         std_files.append(file)
 
 print("Finished sort.")
+
+print("\n==============================================================")
 print("Found {} science frames.".format(len(science_files)))
 print("Found {} bias frames.".format(len(bias_files)))
 print("Found {} dark frames.".format(len(dark_files)))
