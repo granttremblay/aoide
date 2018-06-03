@@ -43,19 +43,18 @@ def main():
 
 
 
-    print("esorex path is {}".format(esorex_path))
+    print("\nesorex path is {}".format(esorex_path))
 
     static_cal_dir = os.path.abspath(args.static_cal_dir)
-    print("Static Calibration Files directory is {}".format(static_cal_dir))
-    print("IF YOU'RE NOT RUNNING THIS ON GRANT TREMBLAY'S MACHINES, this is PROBABLY INCORRECT!")
-    print("Specify the correct directory with --static_cal_dir. If you've done so, ignore this. ")
+    print("\nStatic Calibration Files directory is {}".format(static_cal_dir))
+    print("If this is incorrect, you can specify it with --static_cal_dir.")
 
     if args.testsetup is True:
         sys.exit("--testsetup was set, exiting before reduction.")
 
     #################### CREATE SOF FILES #####################
 
-    print("_________________________   Creating SOF Files    _______________________\n")
+    print("\n_________________________   Creating SOF Files    _______________________\n")
     sof.make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname)
 
     os.chdir(reduction_dir)
