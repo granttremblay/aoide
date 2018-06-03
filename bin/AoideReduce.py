@@ -4,9 +4,11 @@ Reduce a MUSE cube | G. Tremblay
 '''
 import os
 import sys
+import glob
 import time
 
 from distutils import spawn
+from shutil import copyfile
 
 import argparse
 
@@ -55,9 +57,10 @@ def main():
     #################### CREATE SOF FILES #####################
 
     print("\n_________________________   Creating SOF Files    _______________________\n")
-    sof.make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname)
+    sof.make_sof_files(raw_data_dir, reduction_dir, static_cal_dir)
 
     os.chdir(reduction_dir)
+    print("Changed working directory to {}.".format(reduction_dir))
 
     if skip_existing is True:
         if os.path.isfile('MASTER_BIAS.FITS'):
@@ -122,9 +125,23 @@ def main():
     os.system("OMP_NUM_THREADS={} esorex --log-file=fluxcal.log muse_standard --filter=white fluxcal.sof".format(cores))
 
 
-    print("=======           SCIPOST              =======")
-    os.system("OMP_NUM_THREADS={} esorex --log-file=fluxcal.log muse_standard --filter=white fluxcal.sof".format(cores))
+    print("=======   SCIENCE POSTPROCESSING  =======")
 
+    # Count the number of science_scipost_N files created
+
+    science_scipost_files = sort(glob.glob("science_scipost_1.sof"))
+
+    for i in range(len(science_scipost_files):
+        print("BEGGINING SCIPOST RUN #{}".format(i+1))
+        os.system("OMP_NUM_THREADS={} muse_scipost --filter=white,Johnson_V,Cousins_R,Cousins_I --save=cube,individual --skymodel_fraction=0.3 --skymethod=simple science_scipost_{}.sof".format(cores, i + 1))
+
+        os.rename("IMAGE_FOV_0001.fits", "IMAGE_FOV_0001_{}.fits".format(i+1))
+        os.rename("PIXTABLE_REDUCED_0001.fits", "PIXTABLE_REDUCED_0001_{}.fits".format(i+1))
+        os.rename("DATACUBE_FINAL.fits", "DATACUBE_SINGLE_FINAL_0001_{}.fits".format(i+1))
+
+
+    print("=======   FINAL COMBINATION  =======")
+    os.system("OMP_NUM_THREADS={} muse_exp_combine --pixfrac=0.8 --filter=white,Johnson_V,Cousins_R,Cousins_I combine.sof".format(cores))
 
 
 def parse_args():
@@ -157,3 +174,4 @@ if __name__ == '__main__':
     runtime = round((time.time() - start_time), 3)
     print("\n=====================    AOIDE is Finished   ====================\n")
     print("Finished in {} minutes.".format(round(runtime / 60, 3)))
+    print("Your data products are in {}.".format(reduction_dir))
