@@ -57,40 +57,40 @@ print("Found {} fluxcal standard frames".format(len(std_files)))
 print("\n======================    SCIENCE FILES   ====================\n")
 
 for file in science_files:
-    print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "OBJECT"), fits.getval(file, "EXPTIME")))
+    print("{} is {} | OBJECT IS {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "OBJECT"), fits.getval(file, "EXPTIME")))
 
 print("\n======================    STD FILES   ====================\n")
 
 for file in std_files:
-    print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "OBJECT"), fits.getval(file, "EXPTIME")))
+    print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "EXPTIME")))
 
 
 print("\n======================    BIAS FILES   ====================\n")
 
 for file in bias_files:
-    print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "OBJECT"), fits.getval(file, "EXPTIME")))
+    print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "EXPTIME")))
 
 
 print("\n======================    DARK FILES   ====================\n")
 
 for file in dark_files:
-    print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "OBJECT"), fits.getval(file, "EXPTIME")))
+    print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "EXPTIME")))
 
 print("\n======================    FLAT FILES   ====================\n")
 
 for file in flat_files:
-    print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "OBJECT"), fits.getval(file, "EXPTIME")))
+    print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "EXPTIME")))
 
 
 print("\n======================    ARC FILES   ====================\n")
 
 for file in arc_files:
-    print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "OBJECT"), fits.getval(file, "EXPTIME")))
+    print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "EXPTIME")))
 
 print("\n======================    TWILIGHT FILES   ====================\n")
 
 for file in twilight_files:
-    print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "OBJECT"), fits.getval(file, "EXPTIME")))
+    print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "EXPTIME")))
 
 print("\nBEFORE RUNNING AoideReduce, CHECK THAT THE ABOVE LOOKS OKAY\n")
 print("\n======================    FINISHED ID RUN   ====================\n")
