@@ -111,7 +111,7 @@ def main():
 
     for i in range(len(science_scipost_files)):
         print("BEGGINING SCIPOST RUN #{}".format(i+1))
-        os.system("OMP_NUM_THREADS={} muse_scipost --filter=white,Johnson_V,Cousins_R,Cousins_I --save=cube,individual --skymodel_fraction=0.3 --skymethod=simple science_scipost_{}.sof".format(cores, i + 1))
+        os.system("OMP_NUM_THREADS={} esorex --log-file=sci_scipost_{}.log muse_scipost --filter=white,Johnson_V,Cousins_R,Cousins_I --save=cube,individual --skymodel_fraction=0.3 --skymethod=simple science_scipost_{}.sof".format(cores, i + 1, i + 1))
 
         os.rename("IMAGE_FOV_0001.fits", "IMAGE_FOV_0001_{}.fits".format(i+1))
         os.rename("PIXTABLE_REDUCED_0001.fits", "PIXTABLE_REDUCED_0001_{}.fits".format(i+1))
