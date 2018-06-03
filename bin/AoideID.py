@@ -1,4 +1,4 @@
-#!/usr/bin/env/python
+#!/usr/bin/env python
 
 import glob
 from astropy.io import fits
