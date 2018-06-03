@@ -26,7 +26,7 @@ def main():
 
     print("Raw data directory set to {}".format(args.rawdata))
     print("Using {} processor cores for reduction.".format(args.cores))
-    
+
 
     parent_dir = os.pardir(args.rawdata)
 
@@ -121,11 +121,9 @@ def parse_args():
 
     parser = argparse.ArgumentParser(description="Reduce MUSE cube from raw archive files.")
 
-    parser.add_argument('-r', '--rawdata', type=readable_dir, default='./', metavar='WORKING_DIRECTORY')
+    parser.add_argument('-r', '--rawdata', default='./', metavar='WORKING_DIRECTORY')
 
-    parser.add_argument('--static_cal_dir', type=readable_dir, default='/home/grant/Software/ESO/MUSE/calib/muse-2.4.1/cal', metavar='STATIC_CALIBRATION_DIRECTORY')
-
-
+    parser.add_argument('--static_cal_dir', default='/home/grant/Software/ESO/MUSE/calib/muse-2.4.1/cal', metavar='STATIC_CALIBRATION_DIRECTORY')
 
     parser.add_argument('--skip_existing', action="store_true", default=False,
                         help='Flag to skip creation of existing data products.')
