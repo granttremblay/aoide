@@ -4,33 +4,47 @@ Reduce a MUSE cube | G. Tremblay
 '''
 import os
 import sys
-
 import time
 
-import matplotlib.pyplot as plt
+from distutils import spawn
 
 import argparse
 
 from aoide import make_sof_files as sof
 
 
-
 def main():
 
-    skip_existing = True
+    args = parse_args()
 
-    cores = 6
+    skip_existing = args.skip_existing
+    cores = args.cores
 
-    science_targname = 'Abell 3581'
+    science_targname = args.name
 
-    parent_dir = '/home/grant/Science/museA3581/Data/MUSE'
+    ################## TELL USER THEIR SETUP INFO ############
 
-    raw_data_dir = parent_dir + '/rawdata'
-    reduction_dir = parent_dir + '/reduction'
+    print("Raw data directory set to {}".format(args.rawdata))
+    print("Using {} processor cores for reduction.".format(args.cores))
+    
 
-    static_cal_dir = '/home/grant/Software/ESO/MUSE/calib/muse-2.4.1/cal'
-    esorex = '/home/grant/Software/ESO/MUSE/bin/esorex'
+    parent_dir = os.pardir(args.rawdata)
 
+    raw_data_dir = args.rawdata
+    reduction_dir = os.path.join(args.rawdata, '../reduction')
+
+    if os.path.exists(reduction_dir):
+        print("Data products will be placed in {}".format(reduction_dir))
+    else:
+        os.makedirs(reduction_dir)
+        print("Creating data products directory {}".format(reduction_dir))
+
+    esorex_path = spawn.find_executable("esorex")
+    print("esorex path is {}".format(esorex_path))
+
+    static_cal_dir = args.static_cal_dir
+
+    #################### CREATE SOF FILES #####################
     sof.make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname)
 
     os.chdir(reduction_dir)
@@ -39,7 +53,7 @@ def main():
         if os.path.isfile('MASTER_BIAS.FITS'):
             print("Found MASTER BIAS")
             skip_bias = True
-        else: 
+        else:
             skip_bias = False
 
         if os.path.isfile('MASTER_DARK.FITS'):
@@ -92,28 +106,38 @@ def main():
 
     print("=======    SCIBASIC for STD FRAME      =======")
     os.system("OMP_NUM_THREADS={} esorex --log-file=science_scibasic.log muse_scibasic --nifu=-1 --merge std_scibasic.sof".format(cores))
-    
+
 
     print("=======        FLUX CALIBRATION         =======")
     os.system("OMP_NUM_THREADS={} esorex --log-file=fluxcal.log muse_standard --filter=white fluxcal.sof".format(cores))
-    
+
 
     print("=======           SCIPOST              =======")
-    os.system("OMP_NUM_THREADS={} esorex --log-file=fluxcal.log muse_standard --filter=white fluxcal.sof".format(cores))    
+    os.system("OMP_NUM_THREADS={} esorex --log-file=fluxcal.log muse_standard --filter=white fluxcal.sof".format(cores))
 
 
 
-# def parse_args():
+def parse_args():
 
-#     parser = argparse.ArgumentParser(
-#         description="Produce MUSE cube from raw data")
+    parser = argparse.ArgumentParser(description="Reduce MUSE cube from raw archive files.")
 
-#     parser.add_argument('input_cube', metavar='CUBE_IN', type=str, nargs='?',
-#                         help='Input FITS datacube from which sky spectra are selected')
+    parser.add_argument('-r', '--rawdata', type=readable_dir, default='./', metavar='WORKING_DIRECTORY')
 
-#     args = parser.parse_args()
+    parser.add_argument('--static_cal_dir', type=readable_dir, default='/home/grant/Software/ESO/MUSE/calib/muse-2.4.1/cal', metavar='STATIC_CALIBRATION_DIRECTORY')
 
-#     return args
+
+
+    parser.add_argument('--skip_existing', action="store_true", default=False,
+                        help='Flag to skip creation of existing data products.')
+
+    parser.add_argument('-c', '--cores', type=str, nargs='?',
+                        default='6', help='Number of cores used for procesing.')
+
+    parser.add_argument('-n', '--name', type=str, required=True, help='Name of Science Target')
+
+    args = parser.parse_args()
+
+    return args
 
 
 
