@@ -87,11 +87,7 @@ for file in arc_files:
 
 print("\n======================    TWILIGHT FILES   ====================\n")
 
-for file in twlight_files:
+for file in twilight_files:
     print("{} is {} | OBJECT is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "OBJECT"), fits.getval(file, "EXPTIME")))
 
-
-
-for file in rawfiles:
-
-    print("{} | DPR TYPE {} | TARGNAME is {} | EXPTIME is {}s".format(file, fits.getval(file.split("/")[-1], "ESO DPR TYPE"), fits.getval(file, "OBJECT"), fits.getval(file, "EXPTIME")))
+print("\n======================    FINISHED ID RUN   ====================\n")
