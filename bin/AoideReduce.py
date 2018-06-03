@@ -107,7 +107,7 @@ def main():
 
     # Count the number of science_scipost_N files created
 
-    science_scipost_files = sort(glob.glob("science_scipost_1.sof"))
+    science_scipost_files = sorted(glob.glob("science_scipost_*.sof"))
 
     for i in range(len(science_scipost_files)):
         print("BEGGINING SCIPOST RUN #{}".format(i+1))
