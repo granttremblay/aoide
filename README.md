@@ -19,7 +19,13 @@ alias aoidereduce='/home/grant/Repositories/aoide/bin/AoideReduce.py'
 alias aoidepost='/home/grant/Repositories/aoide/bin/AoidePost.py'
 ```
 
-You may want to do the same! 
+You may want to do the same! In the below examples, I assume that Aoide scripts
+such as `AoideReduce.py` are in your PATH. This will not automatically be the case, of course.
+You could fix that by putting
+```
+export PATH=$PATH:/path/to/aoide/bin
+```
+in your `.bashrc`. 
 
 ### Step 1: Check for Raw Data Completeness
 
