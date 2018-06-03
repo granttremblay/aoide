@@ -125,7 +125,7 @@ def main():
 
     # Combine the three reduced pixtables, trusting the default WCS solution.
     print("=======   FINAL COMBINATION  =======")
-    os.system("OMP_NUM_THREADS={} muse_exp_combine --pixfrac=0.8 --filter=white,Johnson_V,Cousins_R,Cousins_I combine.sof".format(cores))
+    os.system("OMP_NUM_THREADS={} esorex --log-file=align.log muse_exp_combine --pixfrac=0.8 --filter=white,Johnson_V,Cousins_R,Cousins_I combine.sof".format(cores))
 
 
 def parse_args():
