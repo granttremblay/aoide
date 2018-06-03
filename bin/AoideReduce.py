@@ -98,7 +98,7 @@ def main():
         if os.path.isfile('LSF_PROFILE.fits'):
             skip_lsf = True
         if os.path.isfile('TWILIGHT_CUBE.fits'):
-            skip_twlight = True
+            skip_twilight = True
         if os.path.isfile('PIXTABLE_OBJECT_0001-23.fits'):
             skip_science_scibasic = True
         if os.path.isfile('PIXTABLE_STD_0001-23.fits'):
@@ -116,38 +116,59 @@ def main():
     if skip_bias is False:
         print("=======  CREATING MASTER BIAS =======")
         os.system("OMP_NUM_THREADS={} esorex --log-file=bias.log muse_bias --nifu=-1 --merge bias.sof".format(cores))
+    elif skip_bias is True:
+        print("SKIPPING MASTER BIAS CREATION")
 
     if skip_dark is False:
         print("=======  CREATING MASTER DARK =======")
         os.system("OMP_NUM_THREADS={} esorex --log-file=dark.log muse_dark --nifu=-1 --merge dark.sof".format(cores))
+    elif skip_dark is True:
+        print("SKIPPING MASTER DARK CREATION")
 
     if skip_flat is False:
         print("=======  CREATING MASTER FLAT =======")
         os.system("OMP_NUM_THREADS={} esorex --log-file=flat.log muse_flat --nifu=-1 --merge flat.sof".format(cores))
+    elif skip_flat is True:
+        print("SKIPPING MASTER Flat CREATION")
 
     if skip_arc is False:
         print("=======      WAVELENGTH CALIBRATION     =======")
         os.system("OMP_NUM_THREADS={} esorex --log-file=wavecal.log muse_wavecal --nifu=-1 --resample --residuals --merge arc.sof".format(cores))
+    elif skip_arc is True:
+        print("SKIPPING WAVELENGTH CALIBRATION")
 
     if skip_lsf is False:
         print("=======       LINE SPREAD FUNCTION      =======")
         os.system("OMP_NUM_THREADS={} esorex --log-file=lsf.log muse_lsf --nifu=-1 --merge lsf.sof".format(cores))
+    elif skip_lsf is True:
+        print("SKIPPING LSF PROFILE CREATION")
 
     if skip_twilight is False:
         print("=======          TWILIGHT FLATS         =======")
         os.system("OMP_NUM_THREADS={} esorex --log-file=twilight.log muse_twilight twilight.sof".format(cores))
+    elif skip_twilight is True:
+        print("SKIPPING TWILIGHT CUBE CREATION")
+
 
     if skip_science_scibasic is False:
         print("=======    SCIBASIC for SCI FRAMES      =======")
         os.system("OMP_NUM_THREADS={} esorex --log-file=science_scibasic.log muse_scibasic --nifu=-1 --merge science_scibasic.sof".format(cores))
+    elif skip_science_scibasic is True:
+        print("SKIPPING SCIBASIC FOR SCIENCE FRAMES")
+
 
     if skip_std_scibasic is False:
         print("=======    SCIBASIC for STD FRAME      =======")
         os.system("OMP_NUM_THREADS={} esorex --log-file=std_scibasic.log muse_scibasic --nifu=-1 --merge std_scibasic.sof".format(cores))
+    elif skip_std_scibasic is True:
+        print("SKIPPING SCIBASIC FOR STD FRAME(S)")
+
 
     if skip_fluxcal is False:
         print("=======        FLUX CALIBRATION         =======")
         os.system("OMP_NUM_THREADS={} esorex --log-file=fluxcal.log muse_standard --filter=white fluxcal.sof".format(cores))
+    elif skip_fluxcal is True:
+        print("SKIPPING FLUX CALIBRATION")
 
     if skip_scipost is False:
         print("=======   SCIENCE POSTPROCESSING  =======")
@@ -163,12 +184,16 @@ def main():
             os.rename("IMAGE_FOV_0001.fits", "IMAGE_FOV_0001_{}.fits".format(i+1))
             os.rename("PIXTABLE_REDUCED_0001.fits", "PIXTABLE_REDUCED_0001_{}.fits".format(i+1))
             os.rename("DATACUBE_FINAL.fits", "DATACUBE_SINGLE_FINAL_0001_{}.fits".format(i+1))
+    elif skip_scipost is True:
+        print("SKIPPING FINAL SCIENCE PROCESSING")
 
     if skip_combine is False:
         # Combine the three reduced pixtables, trusting the default WCS solution.
         print("=======   FINAL COMBINATION  =======")
         os.system("OMP_NUM_THREADS={} esorex --log-file=combine.log muse_exp_combine --pixfrac=0.8 --filter=white,Johnson_V,Cousins_R,Cousins_I combine.sof".format(cores))
         os.rename("DATACUBE_FINAL.fits", "DATACUBE_AOIDE_UNCLEAN.fits")
+    elif skip_combine is True:
+        print("SKIPPING FINAL SCIENCE COMBINATION")
 
 def parse_args():
 
@@ -203,7 +228,7 @@ def parse_args():
                         help='Flag to skip lsf profile creation.')
 
     parser.add_argument('--skip_twilight', action="store_true", default=False,
-                        help='Flag to skip skyflat creation.')
+                        help='Flag to skip twilight cube creation.')
 
     parser.add_argument('--skip_science_scibasic', action="store_true", default=False,
                         help='Flag to skip the SCIBASIC step for science frames.')
