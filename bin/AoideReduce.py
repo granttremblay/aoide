@@ -49,7 +49,7 @@ def main():
     print("IF YOU'RE NOT RUNNING THIS ON GRANT TREMBLAY'S MACHINES, this is PROBABLY INCORRECT!")
     print("Specify the correct directory with --static_cal_dir. If you've done so, ignore this. ")
 
-    if testsetup is True:
+    if args.testsetup is True:
         sys.exit("--testsetup was set, exiting before reduction.")
 
     #################### CREATE SOF FILES #####################
