@@ -18,16 +18,15 @@ def make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname
 
     # Initialize empty lists
     science_files = []  # Science frames (i.e. OBJECT exposures go here).
-    # Bias frames. We really want to only use 10 of these, often there will be more.
-    bias_files = []
+    bias_files = [] # Bias frames. We really want to only use 10 of these, often there will be more.
     dark_files = []  # Dark frames
     flat_files = []  # Lamp flats
     arc_files = []  # Wavelength calibration files (arc lamps)
     twilight_files = []  # Sky flats
     std_files = []  # STD observations
 
-    print("I'm told your science target is {}. Make sure this is correct.".format(
-        science_targname))
+    print("I'm told your science target is {}. Make sure this is correct.".format(science_targname))
+
     print("Sorting raw data files.")
 
     for file in sorted(rawfiles):
