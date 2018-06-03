@@ -28,8 +28,6 @@ def main():
     print("Using {} processor cores for reduction.".format(args.cores))
 
 
-    parent_dir = os.pardir(args.rawdata)
-
     raw_data_dir = args.rawdata
     reduction_dir = os.path.join(args.rawdata, '../reduction')
 
