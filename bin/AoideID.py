@@ -1,10 +1,19 @@
 #!/usr/bin/env python
+'''
+Aoide | Reduction & Analysis of MUSE observations
+-------------------------------------------------
+Dr. Grant R. Tremblay | Harvard-Smithsonian Center for Astrophysics
+grant.tremblay @ cfa.harvard.edu
+
+See the README associated with this repository for documentation & examples.
+'''
+
 
 import glob
 from astropy.io import fits
 
-print("\n======================    Welcome to AoideID   ====================\n")
-print("Taking inventory of your MUSE raw data directory.\n")
+print("\n=======================   Aoide | Step 0   ====================\n")
+print("AoideID.py: Take inventory of your MUSE raw data directory.\n")
 
 
 rawfiles = glob.glob("*.fits.fz")
@@ -98,4 +107,4 @@ for file in twilight_files:
     print("{} is {} | EXPTIME is {}".format(file, fits.getval(file, "ESO DPR TYPE"), fits.getval(file, "EXPTIME")))
 
 print("\nBEFORE RUNNING AoideReduce, CHECK THAT THE ABOVE LOOKS OKAY\n")
-print("\n======================    FINISHED ID RUN   ====================\n")
+print("\n====================   Aoide | Step 0 Finished   ==================\n")

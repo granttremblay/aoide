@@ -1,8 +1,13 @@
 #!/usr/bin/env python
+'''
+Aoide | Reduction & Analysis of MUSE observations
+-------------------------------------------------
+Dr. Grant R. Tremblay | Harvard-Smithsonian Center for Astrophysics
+grant.tremblay @ cfa.harvard.edu
 
+See the README associated with this repository for documentation & examples.
 '''
-Postprocess a MUSE cube | G. Tremblay
-'''
+
 import os
 import sys
 
@@ -23,8 +28,8 @@ def main():
 
     styleplots()
 
-    print("\n======================    Welcome to AOIDE   ====================\n")
-    print("Prepare Pipeline-reduced MUSE datacubes for Paradise\n")
+    print("\n=======================   Aoide | Step 2   ====================\n")
+    print("AoidePost.py: Prepare Pipeline-reduced MUSE datacubes for Paradise\n")
 
     # If the user hasn't given any arguments, complain.
     if not len(sys.argv) > 1:
@@ -132,6 +137,7 @@ def parse_args():
 
     parser.add_argument('input_cube', metavar='CUBE_IN', type=str, nargs='?',
                         help='Input FITS datacube from which sky spectra are selected')
+
     parser.add_argument('output_cube', metavar='CUBE_OUT', type=str,
                         nargs='?', help='Output FITS datacube with sky residuals subtracted')
 
@@ -141,6 +147,7 @@ def parse_args():
 
     parser.add_argument('pca_sky', metavar='PCA', type=str,
                         nargs='?', help='Input FITS file with PCA components')
+
     parser.add_argument('-c', '--components', type=int, nargs='?',
                         default=150, help='Number of PCA components to be used')
 
@@ -208,5 +215,5 @@ if __name__ == '__main__':
     start_time = time.time()
     main()
     runtime = round((time.time() - start_time), 3)
-    print("\n=====================    AOIDE is Finished   ====================\n")
+    print("\n=================    Aoide | Step 2 Finished   ================\n")
     print("Finished in {} minutes.".format(round(runtime / 60, 3)))

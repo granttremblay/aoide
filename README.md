@@ -25,7 +25,7 @@ You could fix that by putting
 ```
 export PATH=$PATH:/path/to/aoide/bin
 ```
-in your `.bashrc`. 
+in your `.bashrc`.
 
 ### Step 1: Check for Raw Data Completeness
 
@@ -44,6 +44,11 @@ tail -f contents.txt
 
 ### Step 2: Use Aoide to run the MUSE Pipeline
 
+`AoideReduce.py` will
+
+1. Take inventory of the contents of a MUSE raw data directory (make sure your FITS files are straight from the archive, e.g. in `*fits.fz` format.)
+2. Create `.sof` ("set of frames") files, based upon requirements outlined in the [MUSE Pipeline User Manual](https://www.eso.org/sci/software/pipelines/muse/muse-pipe-recipes.html), for use with the `esorex muse_*` recipes.
+3. Run the ESO MUSE Pipeline, again following all basic steps in the Pipeline Manual.  
 
 
 

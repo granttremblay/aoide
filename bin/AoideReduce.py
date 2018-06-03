@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 '''
-Reduce a MUSE cube | G. Tremblay
+Aoide | Reduction & Analysis of MUSE observations
+-------------------------------------------------
+Dr. Grant R. Tremblay | Harvard-Smithsonian Center for Astrophysics
+grant.tremblay @ cfa.harvard.edu
+
+See the README associated with this repository for documentation & examples.
 '''
 import os
 import sys
@@ -18,8 +23,8 @@ from aoide import make_sof_files as sof
 def main():
 
 
-    print("\n======================    Welcome to AoideReduce   ====================\n")
-    print("Prepare Pipeline-reduced MUSE datacubes for Paradise\n")
+    print("\n=======================   Aoide | Step 1   ====================\n")
+    print("AoideReduce.py: Reduce raw MUSE frames to a (mostly) final datacube.\n")
 
     args = parse_args()
 
@@ -59,13 +64,14 @@ def main():
     print("\n_________________________   Creating SOF Files    _______________________\n")
     sof.make_sof_files(raw_data_dir, reduction_dir, static_cal_dir)
 
-    os.chdir(reduction_dir)
-    print("Changed working directory to {}.".format(reduction_dir))
-
+    print("\n______________________  Starting MUSE Pipeline    _______________________\n")
+    #################### RUN THE PIPELINE #####################
 
     print("=======  STARTING REDUCTION OF MUSE DATA =======")
     print("Setting number of OMP threads to {} CPU cores".format(cores))
 
+    os.chdir(reduction_dir)
+    print("Changed working directory to {}.".format(reduction_dir))
 
     print("=======  CREATING MASTER BIAS =======")
     os.system("OMP_NUM_THREADS={} esorex --log-file=bias.log muse_bias --nifu=-1 --merge bias.sof".format(cores))
@@ -106,9 +112,9 @@ def main():
     print("=======   SCIENCE POSTPROCESSING  =======")
 
     # Count the number of science_scipost_N files created
-
     science_scipost_files = sorted(glob.glob("science_scipost_*.sof"))
 
+    # Run muse_scipost for each science exposure. We'll combine them later.
     for i in range(len(science_scipost_files)):
         print("BEGGINING SCIPOST RUN #{}".format(i+1))
         os.system("OMP_NUM_THREADS={} esorex --log-file=sci_scipost_{}.log muse_scipost --filter=white,Johnson_V,Cousins_R,Cousins_I --save=cube,individual --skymodel_fraction=0.3 --skymethod=simple science_scipost_{}.sof".format(cores, i + 1, i + 1))
@@ -117,7 +123,7 @@ def main():
         os.rename("PIXTABLE_REDUCED_0001.fits", "PIXTABLE_REDUCED_0001_{}.fits".format(i+1))
         os.rename("DATACUBE_FINAL.fits", "DATACUBE_SINGLE_FINAL_0001_{}.fits".format(i+1))
 
-
+    # Combine the three reduced pixtables, trusting the default WCS solution.
     print("=======   FINAL COMBINATION  =======")
     os.system("OMP_NUM_THREADS={} muse_exp_combine --pixfrac=0.8 --filter=white,Johnson_V,Cousins_R,Cousins_I combine.sof".format(cores))
 
@@ -144,12 +150,11 @@ def parse_args():
     return args
 
 
-
 if __name__ == '__main__':
 
     start_time = time.time()
     main()
     runtime = round((time.time() - start_time), 3)
-    print("\n=====================    AOIDE is Finished   ====================\n")
+    print("\n=====================    Aoide | Step 1 Finished   ====================\n")
     print("Finished in {} minutes.".format(round(runtime / 60, 3)))
     print("Your data products are in {}.".format(reduction_dir))
