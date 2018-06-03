@@ -3,8 +3,14 @@
 import glob
 from astropy.io import fits
 
+print("\n======================    Welcome to AoideID   ====================\n")
+print("Taking inventory of your MUSE raw data directory.\n")
+
 
 rawfiles = glob.glob("*.fits.fz")
+
+if len(rawfiles) == 0:
+    sys.exit("ERROR. I can find no files here. Make sure you run me in a MUSE raw data directory, and that the FITS files are Fpacked with a *.fz extension.")
 
 # Initialize empty lists
 science_files = []  # Science frames (i.e. OBJECT exposures go here).
@@ -15,8 +21,7 @@ arc_files = []  # Wavelength calibration files (arc lamps)
 twilight_files = []  # Sky flats
 std_files = []  # STD observations
 
-print("\n======================    Welcome to AOIDE   ====================\n")
-print("Identifying Files\n")
+
 
 for file in sorted(rawfiles):
 

@@ -15,14 +15,18 @@ from aoide import make_sof_files as sof
 
 def main():
 
+
+    print("\n======================    Welcome to AoideReduce   ====================\n")
+    print("Prepare Pipeline-reduced MUSE datacubes for Paradise\n")
+
     args = parse_args()
 
     skip_existing = args.skip_existing
     cores = args.cores
 
-    science_targname = args.name
-
     ################## TELL USER THEIR SETUP INFO ############
+
+    print("_________________________   Setting Up    _______________________\n")
 
     print("Raw data directory set to {}".format(args.rawdata))
     print("Using {} processor cores for reduction.".format(args.cores))
@@ -41,13 +45,17 @@ def main():
     print("esorex path is {}".format(esorex_path))
 
     static_cal_dir = os.path.abspath(args.static_cal_dir)
-
-    #################### CREATE SOF FILES #####################
-    sof.make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname)
-
+    print("Static Calibration Files directory is {}".format(static_cal_dir))
+    print("IF YOU'RE NOT RUNNING THIS ON GRANT TREMBLAY'S MACHINES, this is PROBABLY INCORRECT!")
+    print("Specify the correct directory with --static_cal_dir. If you've done so, ignore this. ")
 
     if testsetup is True:
         sys.exit("--testsetup was set, exiting before reduction.")
+
+    #################### CREATE SOF FILES #####################
+
+    print("_________________________   Creating SOF Files    _______________________\n")
+    sof.make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname)
 
     os.chdir(reduction_dir)
 
@@ -133,11 +141,8 @@ def parse_args():
     parser.add_argument('-c', '--cores', type=str, nargs='?',
                         default='6', help='Number of cores used for procesing.')
 
-    parser.add_argument('-n', '--name', type=str, required=True, help='Name of Science Target')
-
     parser.add_argument('--testsetup', action="store_true", default=False,
                         help='Flag to skip everything and simply test setup.')
-
 
     args = parser.parse_args()
 
