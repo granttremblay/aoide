@@ -28,7 +28,7 @@ def main():
     print("Using {} processor cores for reduction.".format(args.cores))
 
 
-    raw_data_dir = args.rawdata
+    raw_data_dir = os.path.abspath(args.rawdata)
     reduction_dir = os.path.join(args.rawdata, '../reduction')
 
     if os.path.exists(reduction_dir):
@@ -40,10 +40,14 @@ def main():
     esorex_path = spawn.find_executable("esorex")
     print("esorex path is {}".format(esorex_path))
 
-    static_cal_dir = args.static_cal_dir
+    static_cal_dir = os.path.abspath(args.static_cal_dir)
 
     #################### CREATE SOF FILES #####################
     sof.make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname)
+
+
+    if testsetup is True:
+        sys.exit("--testsetup was set, exiting before reduction.")
 
     os.chdir(reduction_dir)
 
@@ -130,6 +134,10 @@ def parse_args():
                         default='6', help='Number of cores used for procesing.')
 
     parser.add_argument('-n', '--name', type=str, required=True, help='Name of Science Target')
+
+    parser.add_argument('--testsetup', action="store_true", default=False,
+                        help='Flag to skip everything and simply test setup.')
+
 
     args = parser.parse_args()
 
