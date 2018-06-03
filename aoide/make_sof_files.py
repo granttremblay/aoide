@@ -8,7 +8,7 @@ from astropy.io import fits
 
 
 
-def make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname):
+def make_sof_files(raw_data_dir, reduction_dir, static_cal_dir):
 
     # Work in the reduction directory. We assume it's already createdself.
 
@@ -25,8 +25,6 @@ def make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname
     twilight_files = []  # Sky flats
     std_files = []  # STD observations
 
-    print("I'm told your science target is {}. Make sure this is correct.".format(science_targname))
-
     print("Sorting raw data files.")
 
     for file in sorted(rawfiles):
@@ -35,13 +33,8 @@ def make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname
         print(file.split('/')[-1] + " is " + tags)
 
         if tags == 'OBJECT':
-            if fits.getval(file, "OBJECT") == science_targname:
-                print("Found science observation of {}, appending to science_files.".format(
-                    fits.getval(file, "OBJECT")))
-                science_files.append(file)
-            else:
-                print("Found science observation of {}, inconsistent with stated target name of {}. Skipping.".format(
-                    fits.getval(file, "OBJECT"), science_targname))
+            print("Found science observation of {}, appending to science_files.".format(fits.getval(file, "OBJECT")))
+            science_files.append(file)
 
         if tags == 'BIAS':
             bias_files.append(file)
@@ -73,7 +66,7 @@ def make_sof_files(raw_data_dir, reduction_dir, static_cal_dir, science_targname
     print("Found {} fluxcal standard frames".format(len(std_files)))
 
     if len(science_files) == 0:
-        print("WARNING: No science files found! Make sure you've properly specified your target name.")
+        print("WARNING: No science files found! Run AoideID.py to inventory the contents of your raw data directory.")
 
     ## MAKE BIAS.SOF ########
 
