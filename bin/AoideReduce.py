@@ -32,14 +32,16 @@ def main():
     reduction_dir = os.path.abspath(os.path.join(raw_data_dir, '../reduction'))
     esorex_path = spawn.find_executable("esorex")
 
-    print("Raw data directory set to {}".format(raw_data_dir))
-    print("Using {} processor cores for reduction.".format(args.cores))
-
+    print("\nRaw data directory set to {}".format(raw_data_dir))
     if os.path.exists(reduction_dir):
         print("Data products will be placed in {}".format(reduction_dir))
     else:
         os.makedirs(reduction_dir)
         print("Creating data products directory {}".format(reduction_dir))
+
+    print("\nUsing {} processor cores for reduction.".format(args.cores))
+
+
 
     print("esorex path is {}".format(esorex_path))
 
