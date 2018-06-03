@@ -109,7 +109,7 @@ def main():
 
     science_scipost_files = sort(glob.glob("science_scipost_1.sof"))
 
-    for i in range(len(science_scipost_files):
+    for i in range(len(science_scipost_files)):
         print("BEGGINING SCIPOST RUN #{}".format(i+1))
         os.system("OMP_NUM_THREADS={} muse_scipost --filter=white,Johnson_V,Cousins_R,Cousins_I --save=cube,individual --skymodel_fraction=0.3 --skymethod=simple science_scipost_{}.sof".format(cores, i + 1))
 
