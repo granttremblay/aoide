@@ -240,19 +240,19 @@ def parse_args():
                         help='Flag to skip twilight cube creation.')
 
     parser.add_argument('--skip_science_scibasic', action="store_true", default=False,
-                        help='Flag to skip the SCIBASIC step for science frames.')
+                        help='Flag to skip scibasic for science frames.')
 
     parser.add_argument('--skip_std_scibasic', action="store_true", default=False,
-                        help='Flag to skip the SCIBASIC step for standard star frames.')
+                        help='Flag to skip the scibasic for std frames.')
 
     parser.add_argument('--skip_fluxcal', action="store_true", default=False,
                         help='Flag to skip flux calibration.')
 
     parser.add_argument('--skip_scipost', action="store_true", default=False,
-                        help='Flag to skip final processing of the science observations.')
+                        help='Flag to skip final science processing.')
 
     parser.add_argument('--skip_combine', action="store_true", default=False,
-                        help='Flag to skip alignment & combination of final science frames.')
+                        help='Flag to skip combination of final frames.')
 
 
     args = parser.parse_args()
