@@ -66,6 +66,8 @@ def main():
     bin_cube('{}.voronoi.pixel.dat'.format(name),
              input_cube, '{}.voronoi_rss.fits'.format(name))
 
+    return voronoi_directory
+
 
 def bin_cube(voronoi_pixel, input_cube, output_rss):
     hdu = fits.open(input_cube)
@@ -138,8 +140,9 @@ def parse_args():
 if __name__ == '__main__':
 
     start_time = time.time()
-    main()
+    voronoi_directory = main()
     runtime = round((time.time() - start_time), 3)
     print("\n=================    Aoide | Step 3 Finished   ================\n")
     print("Finished in {} minutes.".format(round(runtime / 60, 3)))
     print("Use the Voronoi-binned cube as part of your Paradise STELLAR fitting.")
+    print("You'll find these products in {}.".format(voronoi_directory))
