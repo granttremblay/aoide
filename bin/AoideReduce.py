@@ -191,9 +191,18 @@ def main():
         # Combine the three reduced pixtables, trusting the default WCS solution.
         print("=======   FINAL COMBINATION  =======")
         os.system("OMP_NUM_THREADS={} esorex --log-file=combine.log muse_exp_combine --pixfrac=0.8 --filter=white,Johnson_V,Cousins_R,Cousins_I combine.sof".format(cores))
+
+        print("Renaming IMAGE_FOV_000*.fits images to list their respective 'filters'".)
+        copyfile("IMAGE_FOV_0001.fits", "IMAGE_whitelight.fits")
+        os.rename("IMAGE_FOV_0002.fits", "IMAGE_Vband.fits")
+        os.rename("IMAGE_FOV_0003.fits", "IMAGE_Rband.fits")
+        os.rename("IMAGE_FOV_0004.fits", "IMAGE_Iband.fits")
+        print("Renaming DATACUBE_FINAL.fits to DATACUBE_AOIDE_UNCLEAN.fits")
         os.rename("DATACUBE_FINAL.fits", "DATACUBE_AOIDE_UNCLEAN.fits")
     elif skip_combine is True:
         print("SKIPPING FINAL SCIENCE COMBINATION")
+
+    return reduction_dir
 
 def parse_args():
 
@@ -254,7 +263,10 @@ def parse_args():
 if __name__ == '__main__':
 
     start_time = time.time()
-    main()
+    reduction_dir = main()
     runtime = round((time.time() - start_time), 3)
     print("\n=====================    Aoide | Step 1 Finished   ====================\n")
     print("Finished in {} minutes.".format(round(runtime / 60, 3)))
+    print("Your products can be found in {}".format(reduction_dir))
+    print("This script will exit there.".format(reduction_dir))
+    print("You should now run AoidePost on DATACUBE_AOIDE_UNCLEAN.fits.")
