@@ -35,11 +35,11 @@ in your `.bashrc`.
 
 Run
 ```
-AoideReduce.py
+AoideID.py
 ```
 with no arguments. It will print simple information about the directory contents. Make sure it looks okay (i.e., you have the correct data for your requested observation). You can save this list by, e.g., typing
 ```
-AoideReduce.py > contents.txt
+AoideID.py > contents.txt
 tail -f contents.txt
 ```
 
@@ -52,11 +52,25 @@ tail -f contents.txt
 2. Create `.sof` ("set of frames") files, based upon requirements outlined in the [MUSE Pipeline User Manual](https://www.eso.org/sci/software/pipelines/muse/muse-pipe-recipes.html), for use with the `esorex muse_*` recipes.
 3. Run the ESO MUSE Pipeline, again following all basic steps in the Pipeline Manual.  
 
+```
+AoideReduce.py /path/to/raw/data -c [# of processor cores to run on] --static_cal_dir [path to your static cal directory]
+```
+If you're running this script from the raw data directory, as you should be, `AoideReduce.py` will run with no arguments. 
+There are a number of other arguments you can pass to this script. Discover them by calling the help flag with `AoideReduce.py -h`. 
+
+```
+AoideReduce.py -c 6 --static_cal_dir /path/to/your/muse/pipeline/static/cal
+```
+
+
 On an Ubuntu 18.04 workstation with an Intel Xeon E5-1650 v3 (6 cores, 3.8 GHz) and 64 GB of RAM,
 one run of `AoideReduce` takes ~90 minutes for a three-pointing science observation. Peak RAM useage
 approaches 60 GB during the `muse_scipost` and `muse_exp_combine` steps, so beware.
 If your processor supports hyperthreading (virtual cores), note that treating these
-as "real" processors is useless, and will likely *decrease* performance.
+as "real" processors is useless, and will likely *decrease* performance. If your processor has 6 cores and 12 threads, use
+```
+AoideReduce.py -c 6
+```
 
 
 ### Step 2: Fit & Subtract Sky Residuals, Bin & Extinction-correct the Datacube
