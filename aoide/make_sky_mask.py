@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+'''
+Aoide | Reduction & Analysis of MUSE observations
+-------------------------------------------------
+Dr. Grant R. Tremblay | Harvard-Smithsonian Center for Astrophysics
+grant.tremblay @ cfa.harvard.edu
+
+See the README associated with this repository for documentation & examples.
+'''
+
 
 from __future__ import print_function
 

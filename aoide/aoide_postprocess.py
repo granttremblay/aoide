@@ -1,3 +1,12 @@
+#!/usr/bin/#!/usr/bin/env python
+'''
+Aoide | Reduction & Analysis of MUSE observations
+-------------------------------------------------
+Dr. Grant R. Tremblay | Harvard-Smithsonian Center for Astrophysics
+grant.tremblay @ cfa.harvard.edu
+
+See the README associated with this repository for documentation & examples.
+'''
 
 from __future__ import division, print_function
 
@@ -18,6 +27,8 @@ except:
     import copyreg as copy_reg
 from types import *
 
+
+numpy.warnings.filterwarnings('ignore')
 
 def subtract_sky(PIXTAB_in, SKYSPEC, PIXTAB_out, parallel=1):
 
