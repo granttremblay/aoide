@@ -48,11 +48,11 @@ def main():
     print("\nAoide will be run in parallel using {} CPU cores.".format(args.cores))
     print("Working directory set to {} (change with -d)\n".format(args.working_directory))
     print("PCA fit will use {} components and {} spectra".format(args.pca_components, args.spectra))
-    print("Cube 2x2 binning is set to {}".format(args.binning))
+    print("Unbinned and 2x2 binned cubes will be created.")
     print("A_V (foreground Galactic extinction at V-band) is set to {}.".format(args.av))
 
     if interactive is True:
-        proceed = yes_no("Are you happy with this setup? Proceed? [yes/no]: ")
+        proceed = yes_no("Are you happy with this setup? Proceed? ([yes]/no): ")
 
         if proceed is False:
             sys.exit("You asked to reset parameters before proceeding. Finished.")
@@ -67,7 +67,7 @@ def main():
     pcamodel_name = skymask_directory + "PCA_SKY.fits"
     skysub_cube_name = working_directory + "DATACUBE_SKYSUB.fits"
     final_cube_name = working_directory + "DATACUBE_AOIDE_FINAL.fits"
-
+    binned_final_cube_name = working_directory + "DATACUBE_AOIDE_FINAL_BINNED.fits"
 
     dirty_cube = args.input_cube
     fovimage = args.fovimage
@@ -79,7 +79,12 @@ def main():
     subtract_sky(dirty_cube, skysub_cube_name, pcamodel_name, skymask_name,
                  args.filter, args.spectra, args.pca_components, args.cores, interactive)
 
-    correct_cube(skysub_cube_name, args.av, binning=args.binning)
+    print("\n__________________   Correct & Finalize Cube    _________________\n")
+    print("                      Creating UNBINNED Cube                     ")
+    correct_cube(skysub_cube_name, args.av, outcube=final_cube_name, binning=False, interactive=True)
+    
+    print("\n                     Creating 2x2 BINNED Cube                    ")
+    correct_cube(skysub_cube_name, args.av, outcube=binned_final_cube_name, binning=True, interactive=True)
 
 
 def subtract_sky(dirty_cube, skysub_cube_name, pcamodel_name, skymask_name, filter, numspectra, components, parallel, interactive):
@@ -89,7 +94,7 @@ def subtract_sky(dirty_cube, skysub_cube_name, pcamodel_name, skymask_name, filt
     if interactive is True:
         if os.path.exists(skysub_cube_name):
             print("\nPCA Sky-subtracted cube already exists at {}.".format(skysub_cube_name))
-            skip_skysub = yes_no("Would you like to use it, and skip this step? [yes/no]")
+            skip_skysub = yes_no("Would you like to use it, and skip this step? ([yes]/no)")
 
             if skip_skysub is True:
                 print("Using existing {}, skipping this step.".format(skysub_cube_name))
@@ -128,7 +133,7 @@ def mask_sky(fovimage, skymask_directory="SKY_MASKS/", skymask_name="SKY_MASKS/S
     if interactive is True:
         if os.path.exists(skymask_name):
             print("\nSky Mask already exists at {}".format(skymask_name))
-            skip_skymask = yes_no("Would you like to use it, and skip this step? [yes/no]")
+            skip_skymask = yes_no("Would you like to use it, and skip this step? ([yes]/no)")
 
             if skip_skymask is True:
                 print("Using existing {}, skipping this step.".format(skymask_name))
@@ -152,18 +157,23 @@ def mask_sky(fovimage, skymask_directory="SKY_MASKS/", skymask_name="SKY_MASKS/S
     make_mask.save_mask()
     print("\nSky Mask created, saved to {}.".format(skymask_name))
 
-def correct_cube(incube, av, outcube="DATACUBE_AOIDE_FINAL.fits", binning=False):
+def correct_cube(incube, av, outcube="DATACUBE_AOIDE_FINAL.fits", binning=False, interactive=True):
 
-    print("\n__________________   Correct & Finalize Cube    _________________\n")
+    if interactive is True:
+        if os.path.exists(outcube):
+            print("\nFinal cube already exists at {}.".format(outcube))
+            skip_correct = yes_no("Would you like to use it, and skip this step? ([yes]/no)")
+
+            if skip_correct is True:
+                print("Using existing {}, skipping this step.".format(outcube))
+                return
 
     aoide_postprocess.correct_cube(incube, outcube, A_V=av, binning=binning)
 
     if binning is False:
         print("Finished. Corrected, unbinned cube saved to {}".format(outcube))
-        print("You should copy this cube to a separate file (i.e. GALAXYNAME_DATACUBE_AOIDE_FINAL.fits) to prevent it being overwritten.")
     elif binning is True:
         print("Finished. Corrected, 2x2 binned cube saved to {}".format(outcube))
-        print("You should copy this cube to a separate file (i.e. GALAXYNAME_DATACUBE_AOIDE_FINAL_BINNED.fits) to prevent it being overwritten.")
 
 def parse_args():
 
@@ -198,11 +208,8 @@ def parse_args():
     parser.add_argument('-c', '--cores', type=str, nargs='?',
                         default='6', help='Number of cores used for computation.')
 
-    parser.add_argument('-a', '--av', required=True,
+    parser.add_argument('-a', '--av', type=float, required=True,
                         help='A_V (extinction at V-band). You can get this from NED for your source. R_V=3.1 is assumed for the galactic extinction correction.')
-
-    parser.add_argument('-b', '--binning', action="store_true", default=False,
-                        help='Flag to bin the cube 2x2.')
 
     parser.add_argument('-e', '--extension', default=1,
                         help='MUSE Data extension.')
@@ -259,4 +266,4 @@ if __name__ == '__main__':
     runtime = round((time.time() - start_time), 3)
     print("\n=================    Aoide | Step 2 Finished   ================\n")
     print("Finished in {} minutes.".format(round(runtime / 60, 3)))
-    print("You should now have a clean datacube ready for Voronoi Binning & Paradise Fitting.")
+    print("Use these cubes for Voronoi Binning & Paradise Fitting.")
