@@ -2,7 +2,7 @@
 
 *"[Aoide](https://en.wikipedia.org/wiki/Aoide),
 one of the nine daughters of Zeus and Mnemosyne..."*
-<!-- 
+<!--
 <img src="misc/A2597_movie.gif" alt="MUSE is awesome" style="width: 200px;"/> -->
 
 #### Dr. Grant R. Tremblay | Astrophysicist | Harvard-Smithsonian Center for Astrophysics
@@ -52,6 +52,20 @@ tail -f contents.txt
 2. Create `.sof` ("set of frames") files, based upon requirements outlined in the [MUSE Pipeline User Manual](https://www.eso.org/sci/software/pipelines/muse/muse-pipe-recipes.html), for use with the `esorex muse_*` recipes.
 3. Run the ESO MUSE Pipeline, again following all basic steps in the Pipeline Manual.  
 
+On an Ubuntu 18.04 workstation with an Intel Xeon E5-1650 v3 (6 cores, 3.8 GHz) and 64 GB of RAM,
+one run of `AoideReduce` takes ~90 minutes for a three-pointing science observation. Peak RAM useage
+approaches 60 GB during the `muse_scipost` and `muse_exp_combine` steps, so beware.
+If your processor supports hyperthreading (virtual cores), note that treating these
+as "real" processors is useless, and will likely *decrease* performance.
+
+
+### Step 2: Fit & Subtract Sky Residuals, Bin & Extinction-correct the Datacube
+
+`AoidePost.py` will ....
+
+```
+aoidepost "DATACUBE_AOIDE_UNCLEAN.fits" -c 6 -av 0.166
+```
 
 
 ![before_pca](misc/before_pca.png)
