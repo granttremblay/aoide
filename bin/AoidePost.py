@@ -249,3 +249,4 @@ if __name__ == '__main__':
     runtime = round((time.time() - start_time), 3)
     print("\n=================    Aoide | Step 2 Finished   ================\n")
     print("Finished in {} minutes.".format(round(runtime / 60, 3)))
+    print("You should now have a clean datacube ready for Voronoi Binning & Paradise Fitting.")
