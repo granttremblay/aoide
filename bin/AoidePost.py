@@ -146,7 +146,7 @@ def correct_cube(incube, av, outcube="DATACUBE_AOIDE_FINAL.fits", binning=False)
 
     print("\n__________________   Correct & Finalize Cube    _________________\n")
 
-    aoide_postprocess.correct_cube(incube, outcube, av, binning)
+    aoide_postprocess.correct_cube(incube, outcube, A_V=av, binning=binning)
 
     if binning is False:
         print("Finished. Corrected, unbinned cube saved to {}".format(outcube))
@@ -170,7 +170,7 @@ def parse_args():
                         default='./', nargs='?', help='Working directory in which \
                         files will be written. Default is current.')
 
-    parser.add_argument('pca_sky', metavar='PCA', type=str,
+    parser.add_argument('--pca_sky', metavar='PCA', type=str,
                         nargs='?', help='Input FITS file with PCA components')
 
     parser.add_argument('-p', '--pca_components', type=int, nargs='?',
