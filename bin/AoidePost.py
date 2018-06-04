@@ -79,7 +79,7 @@ def main():
     subtract_sky(dirty_cube, skysub_cube_name, pcamodel_name, skymask_name,
                  args.filter, args.spectra, args.pca_components, args.cores)
 
-    correct_cube(skysub_cube_name, final_cube_name, args.av, args.binning)
+    correct_cube(skysub_cube_name, args.av, binning=args.binning)
 
 
 def subtract_sky(dirty_cube, skysub_cube_name, pcamodel_name, skymask_name, filter, numspectra, components, parallel):
@@ -142,7 +142,7 @@ def mask_sky(fovimage, skymask_directory="SKY_MASKS/", skymask_name="SKY_MASKS/S
     make_mask.save_mask()
     print("\nSky Mask created, saved to {}.".format(skymask_name))
 
-def correct_cube(incube, outcube="DATACUBE_AOIDE_FINAL.fits", av, binning=False):
+def correct_cube(incube, av, outcube="DATACUBE_AOIDE_FINAL.fits", binning=False):
 
     print("\n__________________   Correct & Finalize Cube    _________________\n")
 
