@@ -88,15 +88,17 @@ def subtract_sky(dirty_cube, skysub_cube_name, pcamodel_name, skymask_name, filt
 
     print("\nPerforming PCA on sky using a median filter of {} and {} spectra.".format(
         filter, numspectra))
+    print("This should only take a few minutes.")
     aoide_postprocess.create_PCA_sky(
         dirty_cube, pcamodel_name, skymask_name, filter, numspectra, parallel)
 
     print("Fitting & Subtracting PCA model using {} PCA components and {} CPU cores.".format(
         components, parallel))
-    print("This could take over an hour. Please be patient.")
+    print("This could take over an hour. Please be patient :)")
     aoide_postprocess.subtract_PCA_sky(dirty_cube, skysub_cube_name, pcamodel_name, components, filter, parallel)
 
     print("\nFinally finished with PCA modeling. Created {}.".format(skysub_cube_name))
+
 
 
 def mask_sky(fovimage, skymask_directory="SKY_MASKS/", skymask_name="SKY_MASKS/SKY_MASK.fits", muse_data_extension=1, interactive=True):
