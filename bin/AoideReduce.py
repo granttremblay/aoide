@@ -267,6 +267,6 @@ if __name__ == '__main__':
     runtime = round((time.time() - start_time), 3)
     print("\n=====================    Aoide | Step 1 Finished   ====================\n")
     print("Finished in {} minutes.".format(round(runtime / 60, 3)))
-    print("Your products can be found in {}".format(reduction_dir))
-    print("This script will exit there.".format(reduction_dir))
+    print("Your products can be found in {}. Exiting to that directory.".format(reduction_dir))
     print("You should now run AoidePost on DATACUBE_AOIDE_UNCLEAN.fits.")
+    os.chdir(reduction_dir)
