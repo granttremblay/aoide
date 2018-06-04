@@ -11,6 +11,7 @@ See the README associated with this repository for documentation & examples.
 
 from __future__ import division, print_function
 import os
+import sys
 import glob
 
 from astropy.io import fits
@@ -75,7 +76,10 @@ def make_sof_files(raw_data_dir, reduction_dir, static_cal_dir):
     print("Found {} fluxcal standard frames".format(len(std_files)))
 
     if len(science_files) == 0:
-        print("WARNING: No science files found! Run AoideID.py to inventory the contents of your raw data directory.")
+        sys.exit("WARNING: No science files found! Run AoideID.py to inventory the contents of your raw data directory.")
+
+    if len(dark_files) == 0:
+        sys.exit("WARNING: No dark files found! You must not have fully downloaded the raw calibration data. Please get them from the ESO archive/")
 
     ## MAKE BIAS.SOF ########
 
