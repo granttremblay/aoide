@@ -77,6 +77,9 @@ def make_sof_files(raw_data_dir, reduction_dir, static_cal_dir):
     if len(science_files) == 0:
         print("WARNING: No science files found! Run AoideID.py to inventory the contents of your raw data directory.")
 
+    if len(dark_files) == 0:
+        print("WARNING: No dark files found! You must not have fully downloaded the raw calibration data. Please get them from the ESO archive/")
+
     ## MAKE BIAS.SOF ########
 
     bias_sof_file = "bias.sof"
