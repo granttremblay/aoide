@@ -28,6 +28,8 @@ except:
 from types import *
 
 
+numpy.warnings.filterwarnings('ignore')
+
 def subtract_sky(PIXTAB_in, SKYSPEC, PIXTAB_out, parallel=1):
 
     hdu_PIX = pyfits.open(PIXTAB_in)
