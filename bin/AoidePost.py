@@ -130,7 +130,7 @@ def mask_sky(fovimage, skymask_directory="SKY_MASKS/", skymask_name="SKY_MASKS/S
             print("\nSky Mask already exists at {}".format(skymask_name))
             skip_skymask = yes_no("Would you like to use it, and skip this step? [yes/no]")
 
-            if edit_skymask is True:
+            if skip_skymask is True:
                 print("Using existing {}, skipping this step.".format(skymask_name))
                 return
 
