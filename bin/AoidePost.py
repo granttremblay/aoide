@@ -77,14 +77,24 @@ def main():
              muse_data_extension, interactive)
 
     subtract_sky(dirty_cube, skysub_cube_name, pcamodel_name, skymask_name,
-                 args.filter, args.spectra, args.pca_components, args.cores)
+                 args.filter, args.spectra, args.pca_components, args.cores, interactive)
 
     correct_cube(skysub_cube_name, args.av, binning=args.binning)
 
 
-def subtract_sky(dirty_cube, skysub_cube_name, pcamodel_name, skymask_name, filter, numspectra, components, parallel):
+def subtract_sky(dirty_cube, skysub_cube_name, pcamodel_name, skymask_name, filter, numspectra, components, parallel, interactive):
 
     print("\n________________   Fit & Subtract PCA Sky Model    _______________\n")
+
+    if interactive is True:
+        if os.path.exists(skysub_cube_name):
+            print("\nPCA Sky-subtracted cube already exists at {}.".format(skysub_cube_name))
+            skip_skysub = yes_no("Would you like to use it, and skip this step? [yes/no]")
+
+            if skip_skysub is True:
+                print("Using existing {}, skipping this step.".format(skysub_cube_name))
+                return
+
 
     print("\nPerforming PCA on sky using a median filter of {} and {} spectra.".format(
         filter, numspectra))
@@ -118,17 +128,15 @@ def mask_sky(fovimage, skymask_directory="SKY_MASKS/", skymask_name="SKY_MASKS/S
     if interactive is True:
         if os.path.exists(skymask_name):
             print("\nSky Mask already exists at {}".format(skymask_name))
-            edit_skymask = yes_no(
-                'Would you like to edit & overwrite it? [yes/no]: ')
+            skip_skymask = yes_no("Would you like to use it, and skip this step? [yes/no]")
 
-            if edit_skymask is False:
+            if edit_skymask is True:
                 print("Using existing {}, skipping this step.".format(skymask_name))
                 return
 
     if not os.path.exists(skymask_directory):
         os.makedirs(skymask_directory)
-        print("Sky Mask Directory {} not found. Creating it.".format(
-            skymask_directory))
+        print("Sky Mask Directory {} not found. Creating it.".format(skymask_directory))
 
     print("Sky Mask Components will be saved in {}".format(skymask_directory))
     print("\nA window should appear.")
