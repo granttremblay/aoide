@@ -192,7 +192,7 @@ def main():
         print("=======   FINAL COMBINATION  =======")
         os.system("OMP_NUM_THREADS={} esorex --log-file=combine.log muse_exp_combine --pixfrac=0.8 --filter=white,Johnson_V,Cousins_R,Cousins_I combine.sof".format(cores))
 
-        print("Renaming IMAGE_FOV_000*.fits images to list their respective 'filters'".)
+        print("Renaming IMAGE_FOV_000*.fits images to list their respective 'filters'.")
         copyfile("IMAGE_FOV_0001.fits", "IMAGE_whitelight.fits")
         os.rename("IMAGE_FOV_0002.fits", "IMAGE_Vband.fits")
         os.rename("IMAGE_FOV_0003.fits", "IMAGE_Rband.fits")
