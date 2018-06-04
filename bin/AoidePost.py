@@ -38,14 +38,25 @@ def main():
 
     args = parse_args()
 
+    if args.dontask is True:
+        interactive = False
+    elif args.dontask is False:
+        interactive = True
+
+
     print("_________________________   Setting Up    _______________________\n")
-    print("\nAoide will be run in parallel using {} CPU cores.".format(args.parallel))
+    print("\nAoide will be run in parallel using {} CPU cores.".format(args.cores))
     print("Working directory set to {} (change with -d)\n".format(args.working_directory))
+    print("PCA fit will use {} components and {} spectra".format(args.pca_components, args.spectra))
+    print("Cube 2x2 binning is set to {}".format(args.binning))
+    print("A_V (foreground Galactic extinction at V-band) is set to {}.".format(args.av))
 
-    proceed = yes_no("Are you happy with this setup? Proceed? [yes/no]: ")
+    if interactive is True:
+        proceed = yes_no("Are you happy with this setup? Proceed? [yes/no]: ")
 
-    if proceed is False:
-        sys.exit("You asked to reset parameters before proceeding. Finished.")
+        if proceed is False:
+            sys.exit("You asked to reset parameters before proceeding. Finished.")
+
 
     # Set directories & keep things clean.
     working_directory = args.working_directory
@@ -55,9 +66,8 @@ def main():
     skymask_name = skymask_directory + "SKY_MASK.fits"
     pcamodel_name = skymask_directory + "PCA_SKY.fits"
     skysub_cube_name = working_directory + "DATACUBE_SKYSUB.fits"
+    final_cube_name = working_directory + "DATACUBE_AOIDE_FINAL.fits"
 
-    # Default is True. If so, will query the user at various points.
-    interactive = args.dontask
 
     dirty_cube = args.input_cube
     fovimage = args.fovimage
@@ -65,8 +75,11 @@ def main():
 
     mask_sky(fovimage, skymask_directory, skymask_name,
              muse_data_extension, interactive)
+
     subtract_sky(dirty_cube, skysub_cube_name, pcamodel_name, skymask_name,
-                 args.filter, args.spectra, args.components, args.parallel)
+                 args.filter, args.spectra, args.pca_components, args.cores)
+
+    correct_cube(skysub_cube_name, final_cube_name, args.av, args.binning)
 
 
 def subtract_sky(dirty_cube, skysub_cube_name, pcamodel_name, skymask_name, filter, numspectra, components, parallel):
@@ -129,6 +142,18 @@ def mask_sky(fovimage, skymask_directory="SKY_MASKS/", skymask_name="SKY_MASKS/S
     make_mask.save_mask()
     print("\nSky Mask created, saved to {}.".format(skymask_name))
 
+def correct_cube(incube, outcube="DATACUBE_AOIDE_FINAL.fits", av, binning=False):
+
+    print("\n__________________   Correct & Finalize Cube    _________________\n")
+
+    aoide_postprocess.correct_cube(incube, outcube, av, binning)
+
+    if binning is False:
+        print("Finished. Corrected, unbinned cube saved to {}".format(outcube))
+        print("You should copy this cube to a separate file (i.e. GALAXYNAME_DATACUBE_AOIDE_FINAL.fits) to prevent it being overwritten.")
+    elif binning is True:
+        print("Finished. Corrected, 2x2 binned cube saved to {}".format(outcube))
+        print("You should copy this cube to a separate file (i.e. GALAXYNAME_DATACUBE_AOIDE_FINAL_BINNED.fits) to prevent it being overwritten.")
 
 def parse_args():
 
@@ -148,7 +173,7 @@ def parse_args():
     parser.add_argument('pca_sky', metavar='PCA', type=str,
                         nargs='?', help='Input FITS file with PCA components')
 
-    parser.add_argument('-c', '--components', type=int, nargs='?',
+    parser.add_argument('-p', '--pca_components', type=int, nargs='?',
                         default=150, help='Number of PCA components to be used')
 
     parser.add_argument('-f', '--filter', type=int, nargs='?', default=30,
@@ -160,17 +185,24 @@ def parse_args():
     parser.add_argument('-i', '--fovimage', default='IMAGE_FOV_0001.fits',
                         help='FOV image for setting 2D dimesions. Default is IMG_FOV_0001.fits.')
 
-    parser.add_argument('-p', '--parallel', type=str, nargs='?',
-                        default='2', help='Number of cores used for computation.')
+    parser.add_argument('-c', '--cores', type=str, nargs='?',
+                        default='6', help='Number of cores used for computation.')
+
+    parser.add_argument('-a', '--av', required=True,
+                        help='A_V (extinction at V-band). You can get this from NED for your source. R_V=3.1 is assumed for the galactic extinction correction.')
+
+    parser.add_argument('-b', '--binning', action="store_true", default=False,
+                        help='Flag to bin the cube 2x2.')
 
     parser.add_argument('-e', '--extension', default=1,
-                        help='MUSE Data extension')
+                        help='MUSE Data extension.')
 
     parser.add_argument('--cleanup', action="store_true", default=False,
                         help='Flag to clean up temporary working directories. Default is False.')
 
-    parser.add_argument('--dontask', action="store_false", default=True,
-                        help='Flag to skip all interactive steps. Useful for running on a Cluster. But you need SKY_MASK in place.')
+    parser.add_argument('--dontask', action="store_true", default=False,
+                        help='Flag to suppress interactivity. SKY_MASK must be in place.')
+
 
     args = parser.parse_args()
 
