@@ -103,7 +103,7 @@ def subtract_sky(dirty_cube, skysub_cube_name, pcamodel_name, skymask_name, filt
 
 def mask_sky(fovimage, skymask_directory="SKY_MASKS/", skymask_name="SKY_MASKS/SKY_MASK.fits", muse_data_extension=1, interactive=True):
 
-    print("______________________   Create Sky Mask    _____________________\n")
+    print("\n______________________   Create Sky Mask    _____________________\n")
 
     if interactive is False:
         if os.path.exists(skymask_name):
