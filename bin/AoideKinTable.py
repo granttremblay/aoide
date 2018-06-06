@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
 import os
+import time
 
 from astropy.io import fits
 import numpy as np
 
+import argparse
 
 def main():
 
@@ -20,12 +22,18 @@ def main():
     disp_fit = tab.field('disp_fit')
     disp_fit_err = tab.field('disp_fit_err')
 
-    create_kin_tab('%s.voronoi.pixel.dat'.format(name), name + '_rss.kin_table.fits', fiber, vel_fit, vel_fit_err, disp_fit, disp_fit_err)
+    input_pixel_file = '{}.voronoi.pixel.dat'.format(name)
+    output_kin_table = '{}_rss.kin_table.fits'.format(name)
+
+    print("Creating stellar kinematics table from _stellar_table.fits")
+    create_kin_tab(input_pixel_file, output_kin_table, fiber, vel_fit, vel_fit_err, disp_fit, disp_fit_err)
+    print("Done.")
+    print("Your product is {}_rss.kin_table.fits".format(name))
+    print("Use this as the fixed stellar component for your Emission Line Fitting.") 
 
 
 def create_kin_tab(voronoi_pixel,out_table,fiber,vel_fit,vel_fit_err,disp_fit,disp_fit_err):
 
-  print("Creating STELLAR_KIN Table")
   ascii_in = open(voronoi_pixel,'r')
   lines = ascii_in.readlines()
   x = np.arange(len(lines)-1,dtype=np.int16)
@@ -42,7 +50,7 @@ def create_kin_tab(voronoi_pixel,out_table,fiber,vel_fit,vel_fit_err,disp_fit,di
   vel_err_out = np.zeros(len(x),dtype=np.float32)
   disp_out = np.zeros(len(x),dtype=np.float32)
   disp_err_out = np.zeros(len(x),dtype=np.float32)
-  for i in range(max(fiber)): # THIS USED TO SAY range(max(fiber))
+  for i in range(len(fiber)): # THIS USED TO SAY range(max(fiber))
      select = fiber[i]+1 == binNr
      vel_out[select] = vel_fit[i]
      vel_err_out[select] = vel_fit_err[i]
@@ -50,14 +58,14 @@ def create_kin_tab(voronoi_pixel,out_table,fiber,vel_fit,vel_fit_err,disp_fit,di
      disp_err_out[select] = disp_fit_err[i]
 
   columns = []
-  columns.append(pyfits.Column(name='x_cor',format='J', array=x_cor))
-  columns.append(pyfits.Column(name='y_cor',format='J', array=y_cor))
-  columns.append(pyfits.Column(name='vel_fit',format='E', array=vel_out))
-  columns.append(pyfits.Column(name='vel_fit_err',format='E', array=vel_err_out))
-  columns.append(pyfits.Column(name='disp_fit',format='E', array=disp_out))
-  columns.append(pyfits.Column(name='disp_fit_err',format='E', array=disp_err_out))
-  new_table = pyfits.new_table(columns)
-  new_table.writeto(out_table,clobber=True)
+  columns.append(fits.Column(name='x_cor',format='J', array=x_cor))
+  columns.append(fits.Column(name='y_cor',format='J', array=y_cor))
+  columns.append(fits.Column(name='vel_fit',format='E', array=vel_out))
+  columns.append(fits.Column(name='vel_fit_err',format='E', array=vel_err_out))
+  columns.append(fits.Column(name='disp_fit',format='E', array=disp_out))
+  columns.append(fits.Column(name='disp_fit_err',format='E', array=disp_err_out))
+  new_table = fits.TableHDU.from_columns(columns)
+  new_table.writeto(out_table, overwrite=True)
 
 
 def parse_args():
