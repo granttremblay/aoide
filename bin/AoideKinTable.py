@@ -29,7 +29,7 @@ def main():
     create_kin_tab(input_pixel_file, output_kin_table, fiber, vel_fit, vel_fit_err, disp_fit, disp_fit_err)
     print("Done.")
     print("Your product is {}_rss.kin_table.fits".format(name))
-    print("Use this as the fixed stellar component for your Emission Line Fitting.") 
+    print("Use this as the fixed stellar component for your Emission Line Fitting.")
 
 
 def create_kin_tab(voronoi_pixel,out_table,fiber,vel_fit,vel_fit_err,disp_fit,disp_fit_err):
@@ -50,7 +50,7 @@ def create_kin_tab(voronoi_pixel,out_table,fiber,vel_fit,vel_fit_err,disp_fit,di
   vel_err_out = np.zeros(len(x),dtype=np.float32)
   disp_out = np.zeros(len(x),dtype=np.float32)
   disp_err_out = np.zeros(len(x),dtype=np.float32)
-  for i in range(len(fiber)): # THIS USED TO SAY range(max(fiber))
+  for i in range(max(fiber)): # THIS USED TO SAY range(max(fiber))
      select = fiber[i]+1 == binNr
      vel_out[select] = vel_fit[i]
      vel_err_out[select] = vel_fit_err[i]
