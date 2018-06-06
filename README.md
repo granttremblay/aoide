@@ -84,3 +84,16 @@ aoidepost "DATACUBE_AOIDE_UNCLEAN.fits" -c 6 -av 0.166
 
 ![before_pca](misc/before_pca.png)
 ![after_pca](misc/after_pca.png)
+
+
+
+
+### Step 3: Create a Voronoi Tessellated Cube
+
+Example: 
+
+Again, type `aoidevoronoi -h` for useage. 
+
+```
+aoidevoronoi DATACUBE_AOIDE_FINAL.fits -n "Abell2597"
+```
