@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from astropy.io import fits
 import numpy as np
 
@@ -338,5 +340,3 @@ def make_balmer_map(ha_image, hb_image, hdr):
 
 make_balmer_map(Ha_flux_map, Hb_flux_map, hdr)
 make_electron_density_map(SII6717_flux_map, SII6730_flux_map, hdr)
-
-
