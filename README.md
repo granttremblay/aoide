@@ -68,10 +68,11 @@ one run of `AoideReduce` takes ~90 minutes for a three-pointing science observat
 approaches 60 GB during the `muse_scipost` and `muse_exp_combine` steps, so beware.
 If your processor supports hyperthreading (virtual cores), note that treating these
 as "real" processors is useless, and will likely *decrease* performance. If your processor has 6 cores and 12 threads, use
+
+
 ```
 AoideReduce.py -c 6
 ```
-
 
 ### Step 2: Fit & Subtract Sky Residuals, Bin & Extinction-correct the Datacube
 
@@ -82,8 +83,8 @@ aoidepost "DATACUBE_AOIDE_UNCLEAN.fits" -c 6 -av 0.166
 ```
 
 
-![before_pca](misc/before_pca.png)
-![after_pca](misc/after_pca.png)
+![PCA Sky Subtraction Results](misc/pca_humblebrag.png)
+
 
 
 
