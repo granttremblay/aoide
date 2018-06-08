@@ -12,9 +12,11 @@ def main():
 
     args = parse_args()
 
-    name = args.name
+    stellar_table = args.stellar_table
+    voronoi_pixtabl = args.voronoi_pixtab
+    prefix = stellar_table.split(".")[0]
 
-    hdu = fits.open('{}_rss.stellar_table.fits'.format(name))
+    hdu = fits.open(stellar_table)
     tab = hdu[1].data
     fiber = tab.field('fiber')
     vel_fit = tab.field('vel_fit')
@@ -22,13 +24,13 @@ def main():
     disp_fit = tab.field('disp_fit')
     disp_fit_err = tab.field('disp_fit_err')
 
-    input_pixel_file = '{}.voronoi.pixel.dat'.format(name)
-    output_kin_table = '{}_rss.kin_table.fits'.format(name)
+    input_pixel_file = args.voronoi_pixtab
+    output_kin_table = '{}.kin_table.fits'.format(prefix)
 
     print("Creating stellar kinematics table from _stellar_table.fits")
     create_kin_tab(input_pixel_file, output_kin_table, fiber, vel_fit, vel_fit_err, disp_fit, disp_fit_err)
     print("Done.")
-    print("Your product is {}_rss.kin_table.fits".format(name))
+    print("Your product is {}".format(output_kin_table))
     print("Use this as the fixed stellar component for your Emission Line Fitting.")
 
 
@@ -64,6 +66,7 @@ def create_kin_tab(voronoi_pixel,out_table,fiber,vel_fit,vel_fit_err,disp_fit,di
   columns.append(fits.Column(name='vel_fit_err',format='E', array=vel_err_out))
   columns.append(fits.Column(name='disp_fit',format='E', array=disp_out))
   columns.append(fits.Column(name='disp_fit_err',format='E', array=disp_err_out))
+
   new_table = fits.TableHDU.from_columns(columns)
   new_table.writeto(out_table, overwrite=True)
 
@@ -74,8 +77,13 @@ def parse_args():
         description="PCA sky subtraction, galactic extinction correction, and preparation for MUSE cubes that are to be analyzed with Paradise")
 
 
-    parser.add_argument('name', metavar='NAME', type=str, nargs='?',
+    parser.add_argument('stellar_table', metavar='stellar_table', type=str, nargs='?',
                         help='Name of galaxy (used for Prefix).')
+
+
+
+    parser.add_argument('voronoi_pixtab', metavar='voronoi_table', type=str, nargs='?',
+                        help='Name of Vornonoi Pixel Table.')
 
     args = parser.parse_args()
 
