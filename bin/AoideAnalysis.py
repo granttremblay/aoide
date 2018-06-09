@@ -40,8 +40,8 @@ def main():
     prefix = args.prefix
     redshift = args.redshift
 
-    kintable = '{}_rss.kin_table.fits'.format(prefix)
-    elinetable = '{}_rss.eline_table.fits'.format(prefix)
+    kintable = '{}.kin_table.fits'.format(prefix)
+    elinetable = '{}.eline_table.fits'.format(prefix)
 
     make_maps.make_fovimage(fovimage, name = prefix,
                             save=True, file_save_directory=file_save_directory)
