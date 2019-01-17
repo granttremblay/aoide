@@ -63,6 +63,12 @@ def main():
     print("\n_________________________   Creating SOF Files    _______________________\n")
     sof.make_sof_files(raw_data_dir, reduction_dir, static_cal_dir)
 
+    only_make_sof = args.only_make_sof
+    if only_make_sof is True:
+        print("only_make_sof was set to True. SOF files made. Skipping reduction.")
+        sys.exit()
+
+
     print("\n______________________  Starting MUSE Pipeline    _______________________\n")
     #################### RUN THE PIPELINE #####################
 
@@ -220,6 +226,9 @@ def parse_args():
 
     parser.add_argument('--skip_existing', action="store_true", default=False,
                         help='Flag to skip creation of existing data products.')
+
+    parser.add_argument('--only_make_sof', action="store_true", default=False,
+                        help='Flag to only generate the SOF files, skipping all reduction steps.')
 
     parser.add_argument('--skip_bias', action="store_true", default=False,
                         help='Flag to skip master bias creation.')

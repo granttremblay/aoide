@@ -242,7 +242,7 @@ def make_sof_files(raw_data_dir, reduction_dir, static_cal_dir):
 
     if len(std_files) > 1:
         print("Found more than 1 STD observation. Check that this is correct. I'm only using the last one!")
-        std_files_filtered = std_files[-1]
+        std_files_filtered = std_files[-1:]
     else:
         std_files_filtered = std_files
 
